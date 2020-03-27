@@ -2,6 +2,7 @@
 
 # Import important modules
 import random
+import os
 
 
 class Message:
@@ -119,7 +120,8 @@ class Message:
 
 
 class Text:
-    def __init__(self, text_file_path, offset=None, alphabet=None, enc=False, dec=False, brute_force=False):
+    def __init__(self, text_file_path, encrypt_directly=False, offset=None, alphabet=None, enc=False, dec=False,
+                 brute_force=False):
         # Open and read the file
         self.file = open(text_file_path, 'r')
         self.lines_u = self.file.readlines()
@@ -145,3 +147,14 @@ class Text:
             self.encrypted.append(m.encrypted)
             self.decrypted.append(m.decrypted)
 
+        # Encrypt the file directly if necessary
+        if encrypt_directly:
+            os.remove(text_file_path)
+            new_file = open(text_file_path, 'w')
+
+            if self.encrypted[0] is not None:
+                for i in self.encrypted:
+                    new_file.write(i)
+            else:
+                for i in self.decrypted:
+                    new_file.write(i)
