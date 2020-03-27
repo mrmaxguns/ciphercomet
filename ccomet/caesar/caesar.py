@@ -149,12 +149,22 @@ class Text:
 
         # Encrypt the file directly if necessary
         if encrypt_directly:
+            # Remove the old file
             os.remove(text_file_path)
-            new_file = open(text_file_path, 'w')
 
+            # Create the new file
+            new_file = open(text_file_path, 'a+')
+
+            # Add encrypted/decrypted data to new file
             if self.encrypted[0] is not None:
                 for i in self.encrypted:
-                    new_file.write(i)
+                    new_file.write(i+'\n')
             else:
                 for i in self.decrypted:
-                    new_file.write(i)
+                    new_file.write(i+'\n')
+
+            # Close the new file
+            new_file.close()
+
+        # Close the original file
+        self.file.close()
