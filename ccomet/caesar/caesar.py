@@ -116,3 +116,32 @@ class Message:
                 'y': 0.01994,
                 'z': 0.00077
             }
+
+
+class Text:
+    def __init__(self, text_file_path, offset=None, alphabet=None, enc=False, dec=False, brute_force=False):
+        # Open and read the file
+        self.file = open(text_file_path, 'r')
+        self.lines_u = self.file.readlines()
+
+        # strip trailing newlines
+        self.lines = [i.rstrip() for i in self.lines_u]
+
+        # store basic info for easy access
+        self.path = text_file_path
+        self.offset = offset
+        self.alphabet = alphabet
+        self.enc = enc
+        self.dec = dec
+        self.brute_force = brute_force
+
+        # Define encrypted and decrypted lists
+        self.encrypted = []
+        self.decrypted = []
+
+        # Add each converted line to the new lists
+        for i in self.lines:
+            m = Message(i, offset, alphabet, enc, dec, brute_force)
+            self.encrypted.append(m.encrypted)
+            self.decrypted.append(m.decrypted)
+
