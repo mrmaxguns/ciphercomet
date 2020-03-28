@@ -6,7 +6,7 @@ import os
 
 
 class Message:
-    def __init__(self, message_string, offset=None, alphabet=None, enc=False, dec=False, brute_force=False):
+    def __init__(self, message_string, offset=None, alphabet=None, enc=False, dec=False, infer=False):
         """
         The class Message deals with encoding, decoding, and brute force attacks on messages in the form of python
         strings.
@@ -27,7 +27,7 @@ class Message:
 
         :param dec: A boolean statement that says to decrypt the message.
 
-        :param brute_force: A boolean statement that, if true enables brute force mode.
+        :param infer: A boolean statement that, if true enables infer mode.
         """
 
         # Set self.message to the message to the message string
@@ -73,22 +73,22 @@ class Message:
             return ''.join(encrypted_list)
 
         # Set variable to all of the decryption combinations:
-        self.all = []
+        self.brute_force = []
         for i, j in enumerate(range(len(self.alphabet))):
-            self.all.append(crypt(self.message, self.alphabet, self.offset + j, 'd'))
+            self.brute_force.append(crypt(self.message, self.alphabet, self.offset + j, 'd'))
 
         # Encrypt the message
-        if self.mode == 'encryption' and not brute_force:
+        if self.mode == 'encryption' and not infer:
             self.encrypted = crypt(self.message, self.alphabet, self.offset, 'e')
             self.decrypted = None
 
         # Decrypt the message
-        elif self.mode == 'decryption' and not brute_force:
+        elif self.mode == 'decryption' and not infer:
             self.decrypted = crypt(self.message, self.alphabet, self.offset, 'd')
             self.encrypted = None
 
-        # Brute Force
-        elif brute_force is True:
+        # Infer the cypher
+        elif infer is True:
             letter_frequencies = {
                 'a': 0.08167,
                 'b': 0.01492,
@@ -121,7 +121,7 @@ class Message:
 
 class Text:
     def __init__(self, text_file_path, encrypt_directly=False, offset=None, alphabet=None, enc=False, dec=False,
-                 brute_force=False):
+                 infer=False):
         # Open and read the file
         self.file = open(text_file_path, 'r')
         self.lines_u = self.file.readlines()
@@ -135,7 +135,7 @@ class Text:
         self.alphabet = alphabet
         self.enc = enc
         self.dec = dec
-        self.brute_force = brute_force
+        self.infer = infer
 
         # Define encrypted and decrypted lists
         self.encrypted = []
@@ -143,7 +143,7 @@ class Text:
 
         # Add each converted line to the new lists
         for i in self.lines:
-            m = Message(i, offset, alphabet, enc, dec, brute_force)
+            m = Message(i, offset, alphabet, enc, dec, infer)
             self.encrypted.append(m.encrypted)
             self.decrypted.append(m.decrypted)
 
